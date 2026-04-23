@@ -1,0 +1,23 @@
+# Dev notes (not shipped)
+CLAUDE.md
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if ever added)
+node_modules/
+npm-debug.log*
+
+# Backups / temp
+*.bak
+*.tmp
+dist/
+build/
