@@ -1,8 +1,8 @@
 /* ============================================
    KCW — Shared markup renderers
-   Reads SITE / PROJECTS / SERVICES from data.js.
-   All pages get their header, footer and detail
-   pages also get their body from these functions.
+   Reads SITE / PROJECTS from data.js. Every page
+   pulls its header, footer, and (on project.html)
+   its detail body from these functions.
    ============================================ */
 
 /* ---------- Header ---------- */
@@ -11,18 +11,21 @@ function renderSiteHeader({ activeId = 'home', scrolled = false } = {}) {
   const link = (item, variant = 'nav-link') => {
     const isActive = item.id === activeId;
     const cls = `${variant}${isActive ? ' active' : ''}`;
-    return `<a href="index.html${item.hash}" class="${cls}" data-section="${item.id}">${item.label}</a>`;
+    return `<a href="${item.href}" class="${cls}" data-section="${item.id}">${item.label}</a>`;
   };
 
   return `
     <header class="header header-dark${scrolled ? ' scrolled' : ''}">
       <div class="header-inner">
-        <a href="index.html#home" class="logo" aria-label="${SITE.name} Home">
+        <a href="index.html" class="logo" aria-label="${SITE.name} Home">
           <img src="assets/logo-light.png" alt="${SITE.name} Logo" class="logo-img logo-img-light">
           <img src="assets/logo-dark.png" alt="${SITE.name} Logo" class="logo-img logo-img-dark">
         </a>
         <nav class="nav-desktop" aria-label="Main navigation">
           ${SITE.nav.map(item => link(item)).join('')}
+          <a href="${SITE.contact.instagramUrl}" target="_blank" rel="noopener" class="nav-ig-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
         </nav>
         <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -38,7 +41,7 @@ function renderSiteHeader({ activeId = 'home', scrolled = false } = {}) {
 /* ---------- Footer ---------- */
 
 function renderSiteFooter({ variant = 'full' } = {}) {
-  const { contact, nav, footerServiceLinks, year, name, fullName, tagline } = SITE;
+  const { contact, nav, year, name, fullName, tagline } = SITE;
   const copyright = `&copy; ${year} ${name} — ${fullName}. All rights reserved.`;
 
   if (variant === 'minimal') {
@@ -53,15 +56,17 @@ function renderSiteFooter({ variant = 'full' } = {}) {
     `;
   }
 
-  const navLinks  = nav.map(n => `<a href="index.html${n.hash}">${n.label}</a>`).join('');
-  const svcLinks  = footerServiceLinks.map(s => `<a href="index.html#services">${s}</a>`).join('');
+  const navLinks = [
+    `<a href="index.html">Home</a>`,
+    ...nav.map(n => `<a href="${n.href}">${n.label}</a>`),
+  ].join('');
 
   return `
     <footer class="footer">
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="index.html#home" class="footer-brand-logo">
+            <a href="index.html" class="footer-brand-logo">
               <img src="assets/logo-light.png" alt="${name}">
             </a>
             <p>${tagline}</p>
@@ -69,10 +74,6 @@ function renderSiteFooter({ variant = 'full' } = {}) {
           <div>
             <h5>Navigate</h5>
             <div class="footer-links">${navLinks}</div>
-          </div>
-          <div>
-            <h5>Services</h5>
-            <div class="footer-links">${svcLinks}</div>
           </div>
           <div>
             <h5>Contact</h5>
@@ -101,9 +102,23 @@ function renderSiteFooter({ variant = 'full' } = {}) {
   `;
 }
 
-/* ---------- Detail pages (project + service) ---------- */
+/* ---------- Project detail page ---------- */
 
-function renderDetailPage(item, { backHash, backLabel }) {
+function renderDetailPage(item, { backHref, backLabel }) {
+  if (item.gallery?.length) {
+    const lastIdx = item.gallery.length - 1;
+    return `
+      <section class="svc-detail-gallery">
+        <div class="svc-gallery-grid">
+          ${item.gallery.map((g, i) => g.type === 'video'
+            ? `<div class="svc-gallery-item svc-gallery-item--video"><video autoplay muted loop playsinline><source src="${g.src}" type="video/mp4"></video></div>`
+            : `<div class="svc-gallery-item${i === lastIdx ? ' is-last' : ''}"><img src="${g.src}" alt="Project photo"></div>`
+          ).join('')}
+        </div>
+      </section>
+    `;
+  }
+
   const paragraphs = item.narrative.paragraphs.map(p => `<p>${p}</p>`).join('');
   const specs = item.specs.items
     .map(it => `<li><strong>${it.label}</strong>${it.value}</li>`)
@@ -120,7 +135,7 @@ function renderDetailPage(item, { backHash, backLabel }) {
 
     <section class="svc-detail-body">
       <div class="container">
-        <a href="index.html${backHash}" class="svc-detail-back"><span aria-hidden="true">←</span> ${backLabel}</a>
+        <a href="${backHref}" class="svc-detail-back"><span aria-hidden="true">←</span> ${backLabel}</a>
 
         <div class="svc-detail-grid">
           <div>
@@ -138,38 +153,37 @@ function renderDetailPage(item, { backHash, backLabel }) {
             <h3>${item.cta.heading}</h3>
             <p>${item.cta.body}</p>
           </div>
-          <a href="index.html#contact">${item.cta.label} <span aria-hidden="true">→</span></a>
+          <a href="contact.html">${item.cta.label} <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>
   `;
 }
 
-/* ---------- Portfolio carousel (data-driven slides) ---------- */
+/* ---------- Portfolio carousel (legacy, kept for backward compat) ---------- */
 
 function renderPortfolioSlides() {
   return Object.values(PROJECTS).map((p, i) => `
     <a href="project.html?id=${p.id}" class="project-slide${i === 0 ? ' is-active' : ''}" data-address="${p.address}">
       <div class="project-house${p.isCutout ? ' project-house-cutout' : ''}" style="background-image:url('${p.cardImage}')"></div>
-      <div class="project-info">
-        <h3 class="project-info-address">${p.address}</h3>
-        <span class="project-info-cta">View Project <span aria-hidden="true">→</span></span>
-      </div>
     </a>
   `).join('');
 }
 
-/* ---------- Services grid (data-driven tiles) ---------- */
+/* ---------- Projects editorial grid ---------- */
 
-function renderServicesTiles() {
-  return Object.values(SERVICES).map(s => `
-    <a href="service.html?id=${s.id}" class="svc-tile">
-      <div class="svc-tile-media" style="background-image:url('${s.tileImage}')"></div>
-      <div class="svc-tile-body">
-        <span class="svc-tile-label">${s.tileLabel}</span>
-        <h3>${s.tileTitle}</h3>
-        <p>${s.tileBlurb}</p>
-        <span class="svc-tile-arrow">Explore <span aria-hidden="true">→</span></span>
+function renderProjectCards() {
+  return Object.values(PROJECTS).map((p, i) => `
+    <a href="project.html?id=${p.id}" class="proj-card${p.cardContain ? ' proj-card--illustration' : ''}" aria-label="${p.address} — ${p.eyebrow}">
+      <div class="proj-card-img" style="background-image:url('${p.cardImage}');${p.cardContain ? 'background-size:contain;background-color:#f5f5f5;background-repeat:no-repeat;' : ''}"></div>
+      <div class="proj-card-overlay"></div>
+      <div class="proj-card-top">
+        <span class="proj-card-eyebrow">${p.eyebrow}</span>
+      </div>
+      <div class="proj-card-body">
+        <h2 class="proj-card-title">${p.address}</h2>
+        <p class="proj-card-blurb">${p.cardBlurb}</p>
+        <span class="proj-card-cta">View Project <span aria-hidden="true">→</span></span>
       </div>
     </a>
   `).join('');
@@ -201,9 +215,9 @@ function injectDataDrivenSections() {
     portfolioTrack.innerHTML = renderPortfolioSlides();
   }
 
-  const servicesGrid = document.getElementById('servicesGrid');
-  if (servicesGrid && !servicesGrid.children.length) {
-    servicesGrid.innerHTML = renderServicesTiles();
+  const projectsGrid = document.getElementById('projectsGrid');
+  if (projectsGrid && !projectsGrid.children.length) {
+    projectsGrid.innerHTML = renderProjectCards();
   }
 }
 
@@ -211,32 +225,31 @@ function injectDetailFromQuery() {
   const root = document.getElementById('detail-root');
   if (!root) return;
 
-  const type = root.dataset.type;
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
-
-  const source = type === 'service' ? SERVICES : PROJECTS;
-  const item = id ? source[id] : null;
+  const item = id ? PROJECTS[id] : null;
 
   if (!item) {
     root.innerHTML = `
       <section class="svc-detail-body">
         <div class="container">
-          <a href="index.html#${type === 'service' ? 'services' : 'portfolio'}" class="svc-detail-back"><span aria-hidden="true">←</span> Back</a>
-          <h2 style="margin-top:2rem;">Not Found</h2>
-          <p>We couldn't find that ${type}. It may have been renamed or removed.</p>
+          <a href="portfolio.html" class="svc-detail-back"><span aria-hidden="true">←</span> Back to Portfolio</a>
+          <h2 style="margin-top:2rem;">Project Not Found</h2>
+          <p>We couldn't find that project. It may have been renamed or removed.</p>
         </div>
       </section>
     `;
     return;
   }
 
-  document.title = `${item.address || item.tileTitle} — ${SITE.name}`;
+  document.title = `${item.address} — KCW | Custom Construction Toronto`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && item.metaDescription) metaDesc.setAttribute('content', item.metaDescription);
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if (ogTitle) ogTitle.setAttribute('content', `${item.address} — KCW | ${item.detailEyebrow}`);
 
   root.innerHTML = renderDetailPage(item, {
-    backHash: type === 'service' ? '#services' : '#portfolio',
-    backLabel: type === 'service' ? 'Back to Services' : 'Back to Portfolio',
+    backHref: 'portfolio.html',
+    backLabel: 'Back to Portfolio',
   });
 }

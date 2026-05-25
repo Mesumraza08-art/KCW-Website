@@ -1,6 +1,6 @@
 /* ============================================
    KCW — Single source of truth
-   Edit this file to add/edit projects & services;
+   Edit this file to add/edit projects;
    every page reads from here at runtime.
    ============================================ */
 
@@ -18,18 +18,9 @@ const SITE = {
     instagramUrl: 'https://www.instagram.com/k_customwoodwork/',
   },
   nav: [
-    { id: 'home',      label: 'Home',      hash: '#home' },
-    { id: 'about',     label: 'About',     hash: '#about' },
-    { id: 'portfolio', label: 'Portfolio', hash: '#portfolio' },
-    { id: 'services',  label: 'Services',  hash: '#services' },
-    { id: 'contact',   label: 'Contact',   hash: '#contact' },
-  ],
-  footerServiceLinks: [
-    'Custom Cabinetry',
-    'Kitchen Woodwork',
-    'Custom Millwork',
-    'Built-in Solutions',
-    'Wall Paneling',
+    { id: 'about',     label: 'About',     href: 'about.html' },
+    { id: 'portfolio', label: 'Projects', href: 'portfolio.html' },
+    { id: 'contact',   label: 'Contact',   href: 'contact.html' },
   ],
 };
 
@@ -42,9 +33,10 @@ const PROJECTS = {
     detailEyebrow: 'Commercial Millwork',
     address: '3370 Brimley Rd',
     titleLong: '3370 Brimley Rd.',
-    cardImage: 'assets/brimley-cutout.png',
-    isCutout: true,
-    heroImage: 'assets/dental-exterior-wide.jpg',
+    cardImage: 'assets/3370-project-images/PROJECT%20BRIMLEY%20ALBUMCOVER.jpg',
+    cardContain: true,
+    isCutout: false,
+    heroImage: 'assets/brimley house foulder.jpg',
     cardBlurb: 'A modern two-storey residence in Scarborough — brick, stucco, and custom millwork brought together from the studs out.',
     lede: 'A full commercial fit-out in Scarborough — reception joinery, custom millwork, and finish carpentry handled end-to-end by the KCW team.',
     narrative: {
@@ -71,6 +63,46 @@ const PROJECTS = {
       label: 'Start A Project',
     },
     metaDescription: 'KCW Project — 3370 Brimley Rd. Commercial millwork and finish carpentry in Scarborough.',
+    gallery: [
+      { type: 'image', src: 'assets/3370-project-images/1.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/3.5.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/3.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/4.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/5.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/6.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/7.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/8.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/9.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/9.5.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/10.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/11.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/13.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/14.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/15.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/16.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/17.jpg' },
+      { type: 'video', src: 'assets/3370-project-images/12.mp4' },
+      { type: 'image', src: 'assets/3370-project-images/18.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/19.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/20.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/25.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/25.6.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/26.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/27.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/28.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/29.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/22.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/23.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/24.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/framing-interior-ladder-2%20copy%202.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/30.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/IMG_3080.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/IMG_3081.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/IMG_3127.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/IMG_3128.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/IMG_3139.jpg' },
+      { type: 'image', src: 'assets/3370-project-images/brimely%20finished.jpg' },
+    ],
   },
 
   'orange-dental': {
@@ -79,9 +111,9 @@ const PROJECTS = {
     detailEyebrow: 'Commercial Dental',
     address: 'Orange Dental',
     titleLong: 'Orange Dental.',
-    cardImage: 'assets/orange-dental-cutout.png',
+    cardImage: 'assets/orange dental cover.PNG',
     isCutout: true,
-    heroImage: 'assets/dental-cabinetry.jpg',
+    heroImage: 'assets/orange-dental-exterior.jpg',
     cardBlurb: "A residential build shaped around the homeowner's vision — bespoke cabinetry, custom casework, and tight finish work.",
     lede: 'A full commercial fit-out for a modern dental practice — bespoke cabinetry, reception joinery, and treatment-room millwork designed to hold up to daily clinical use.',
     narrative: {
@@ -108,23 +140,39 @@ const PROJECTS = {
       label: 'Start A Project',
     },
     metaDescription: 'KCW Project — Orange Dental. Commercial dental clinic fit-out with custom cabinetry and millwork.',
+    gallery: [
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3596.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3597.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3599.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3600.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3601.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3602.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3603.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3604.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3605.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3606.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3607.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3608.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3609.jpg' },
+      { type: 'image', src: 'assets/orange-dental-album/IMG_3610.jpg' },
+    ],
   },
 
   government: {
     id: 'government',
     eyebrow: 'Structural',
     detailEyebrow: 'Structural',
-    address: '2 Government Road',
-    titleLong: '2 Government Road.',
-    cardImage: 'assets/framing-interior-wide.jpg',
-    isCutout: false,
-    heroImage: 'assets/framing-interior-wide.jpg',
+    address: 'Ramada Hotel',
+    titleLong: 'Ramada Hotel.',
+    cardImage: 'assets/ramada project.jpg',
+    isCutout: true,
+    heroImage: 'assets/ramada project.jpg',
     cardBlurb: 'Structural framing and rough carpentry delivered to spec — on time, on budget, and inspection-ready.',
     lede: 'Structural framing and rough carpentry delivered to spec — on time, on budget, and inspection-ready from the first walk-through.',
     narrative: {
       heading: 'Project Overview',
       paragraphs: [
-        'Structural work is where careful planning meets honest labour. 2 Government Road was a full framing package: floors, walls, roof system, and the engineered connections that make it all hold together through a decade of Ontario winters.',
+        'Structural work is where careful planning meets honest labour. Ramada Hotel was a full framing package: floors, walls, roof system, and the engineered connections that make it all hold together through a decade of Ontario winters.',
         "KCW's crew handled framing end-to-end, coordinating directly with the structural engineer and the site supervisor so nothing got lost between the drawings and the wood. Inspectors came, inspectors signed off — first pass.",
         "Good framing isn't glamorous work. But every finished space that follows depends on it being done right the first time.",
       ],
@@ -132,7 +180,7 @@ const PROJECTS = {
     specs: {
       heading: 'Project Specs',
       items: [
-        { label: 'Location',  value: '2 Government Road, Greater Toronto Area' },
+        { label: 'Location',  value: 'Ramada Hotel, Greater Toronto Area' },
         { label: 'Scope',     value: 'Structural framing & rough carpentry' },
         { label: 'Materials', value: 'Engineered lumber, dimensional framing' },
         { label: 'Delivered', value: 'In-house crew, licensed and insured' },
@@ -144,7 +192,7 @@ const PROJECTS = {
       body: "Send us the drawings — we'll tell you what it really takes to build it right.",
       label: 'Request A Quote',
     },
-    metaDescription: 'KCW Project — 2 Government Road. Structural framing and rough carpentry delivered to code.',
+    metaDescription: 'KCW Project — Ramada Hotel. Structural framing and rough carpentry delivered to code.',
   },
 
   skyridge: {
@@ -153,9 +201,9 @@ const PROJECTS = {
     detailEyebrow: 'Wall Paneling',
     address: '1100 Skyridge Blvd',
     titleLong: '1100 Skyridge Blvd.',
-    cardImage: 'assets/dental-interior-slats.jpg',
-    isCutout: false,
-    heroImage: 'assets/dental-interior-slats.jpg',
+    cardImage: 'assets/PREMIUMOUTDOOR LIVING.jpg',
+    isCutout: true,
+    heroImage: 'assets/1100 skyridge blvd.JPG',
     cardBlurb: 'Bespoke wall paneling and slat treatments milled in-house and installed by the KCW crew.',
     lede: 'Bespoke wall paneling and slat treatments — milled in-house, colour-matched to the space, and installed by the same crew that built them.',
     narrative: {
@@ -182,154 +230,5 @@ const PROJECTS = {
       label: 'Start A Project',
     },
     metaDescription: 'KCW Project — 1100 Skyridge Blvd. Bespoke wall paneling and slat treatments.',
-  },
-
-  bridle: {
-    id: 'bridle',
-    eyebrow: 'Commercial',
-    detailEyebrow: 'Commercial',
-    address: '2490 Bridle Rd',
-    titleLong: '2490 Bridle Rd.',
-    cardImage: 'assets/dental-reception.jpg',
-    isCutout: false,
-    heroImage: 'assets/dental-reception.jpg',
-    cardBlurb: 'A commercial fit-out anchored by a sculpted slat ceiling, a stone-clad reception desk, and custom joinery throughout.',
-    lede: 'A commercial fit-out anchored by a sculpted slat ceiling, a stone-clad reception desk, and custom joinery running the length of the space.',
-    narrative: {
-      heading: 'Project Overview',
-      paragraphs: [
-        "The 2490 Bridle fit-out is a good example of what happens when a client trusts the shop: a reception room that doesn't look like anyone else's. The centrepiece is a custom slat ceiling that runs from the entry back over the check-in desk, framing the space without feeling heavy.",
-        'Below it, a reception desk pairs warm wood casework with a marbled stone face — a deliberate contrast that makes both materials read as intentional. Every built-in, every trim detail, every piece of millwork in the space was drawn, built, and installed by KCW.',
-        'The space has been open long enough now that we can say it honestly: it still looks like day one.',
-      ],
-    },
-    specs: {
-      heading: 'Project Specs',
-      items: [
-        { label: 'Location',  value: '2490 Bridle Rd, Greater Toronto Area' },
-        { label: 'Scope',     value: 'Full commercial fit-out & joinery' },
-        { label: 'Features',  value: 'Custom slat ceiling, reception casework, integrated storage' },
-        { label: 'Delivered', value: 'End-to-end by the KCW crew' },
-        { label: 'Status',    value: 'Completed & open' },
-      ],
-    },
-    cta: {
-      heading: 'Planning A Commercial Space?',
-      body: "Reception desks, slat ceilings, full fit-outs — tell us what you're building.",
-      label: 'Start A Project',
-    },
-    metaDescription: 'KCW Project — 2490 Bridle Rd. Commercial fit-out with sculpted slat ceiling, custom reception, and full-scope millwork.',
-  },
-};
-
-/* ---------- Services (services detail pages) ---------- */
-
-const SERVICES = {
-  'custom-homes': {
-    id: 'custom-homes',
-    tileLabel: '01 — New Builds',
-    tileTitle: 'Custom Homes',
-    tileBlurb: 'Ground-up custom homes shaped around how you actually live — architectural millwork and craftsmanship built in from day one.',
-    tileImage: 'assets/kcw-site-banner.jpg',
-    detailEyebrow: '01 — New Builds',
-    titleLong: 'Custom Homes, Built Around You.',
-    heroImage: 'assets/kcw-site-banner.jpg',
-    lede: "From the foundation up — ground-up residences where architectural millwork and craftsmanship aren't an upgrade, they're the plan.",
-    narrative: {
-      heading: 'A Home Built The Way You Live.',
-      paragraphs: [
-        "Every KCW custom home starts the same way: a long conversation, a clear plan, and a detailed set of drawings. We partner with architects, designers, and — when you need one — we bring our own. The result is a home that's been engineered for your routine, not a plan pulled off the shelf.",
-        'Because we run the woodwork shop in-house, the custom cabinetry, built-ins, stair systems, and millwork are all integrated into the build from day one. No retrofits. No guesswork at the finish line.',
-        'We build across the Greater Toronto Area — fully licensed, fully insured, and obsessive about Ontario Building Code compliance at every stage.',
-      ],
-    },
-    specs: {
-      heading: "What's Included",
-      items: [
-        { label: 'Site & Feasibility',       value: 'Lot review, zoning checks, and a realistic budget from day one.' },
-        { label: 'Architecture & Design',    value: 'Collaboration with your architect or ours — drawings that reflect how you actually live.' },
-        { label: 'Structural Framing',       value: 'Full framing package delivered by our in-house crew, built to code and inspection-ready.' },
-        { label: 'Integrated Millwork',      value: 'Custom cabinetry, staircases, built-ins, and paneling engineered into the build, not bolted on later.' },
-        { label: 'Finishing & Handover',     value: 'Painting, flooring, trim, and final walk-through — the house you asked for, on the day you were promised.' },
-      ],
-    },
-    cta: {
-      heading: 'Thinking About A Custom Home?',
-      body: "Let's sit down, walk the lot, and sketch what's possible.",
-      label: 'Start The Conversation',
-    },
-    metaDescription: 'KCW — Custom Homes. Ground-up custom home builds across the Greater Toronto Area.',
-  },
-
-  residential: {
-    id: 'residential',
-    tileLabel: '02 — Construction',
-    tileTitle: 'Residential Construction',
-    tileBlurb: 'Full-scope residential builds, additions, and structural framing — licensed, insured, and delivered to code across the GTA.',
-    tileImage: 'assets/project-framing-exterior.jpg',
-    detailEyebrow: '02 — Construction',
-    titleLong: 'Residential Construction, Done Right.',
-    heroImage: 'assets/project-framing-exterior.jpg',
-    lede: "Framing, additions, second storeys, full structural builds — delivered by a licensed crew that treats your home the way we'd treat our own.",
-    narrative: {
-      heading: 'Structural Work You Can Trust.',
-      paragraphs: [
-        "Residential construction at KCW is the backbone of what we do. Our crew has been framing homes across the GTA for over a decade — additions, second storeys, garden suites, and full rebuilds — and we've learned that the quality of the finish is set the day the framing is tight.",
-        "We show up on time, tarp what we should, protect what we can't move, and keep you in the loop from the first permit to the final inspection. No cutting corners on code. No surprises on the invoice.",
-        'Every project is backed by our own licensed, insured team — no rotating subcontractors, no hand-offs that drop the ball.',
-      ],
-    },
-    specs: {
-      heading: 'What We Build',
-      items: [
-        { label: 'Additions & Second Storeys',  value: 'Expanding what you already love about your home, without starting over.' },
-        { label: 'Structural Framing',          value: 'Load-bearing work, roof systems, and engineered lumber — done to spec, on schedule.' },
-        { label: 'Garden & Laneway Suites',     value: 'Purpose-built secondary dwellings, permitted and built end-to-end.' },
-        { label: 'Full Rebuilds',               value: "When it's time to take it back to studs — or further — we handle the whole thing." },
-        { label: 'Permits & Inspections',       value: "We manage the paperwork and the inspectors so you don't have to." },
-      ],
-    },
-    cta: {
-      heading: 'Got A Build In Mind?',
-      body: "Tell us what you're planning — we'll tell you what it really takes.",
-      label: 'Request A Quote',
-    },
-    metaDescription: 'KCW — Residential Construction. Framing, additions, and full residential builds across the Greater Toronto Area.',
-  },
-
-  renovations: {
-    id: 'renovations',
-    tileLabel: '03 — Design-Led',
-    tileTitle: 'Custom Design & Renovations',
-    tileBlurb: 'Design-forward renovations and bespoke interior transformations — cabinetry, millwork, and finishes, all handled in-house.',
-    tileImage: 'assets/dental-reception.jpg',
-    detailEyebrow: '03 — Design-Led',
-    titleLong: 'Custom Design & Renovations.',
-    heroImage: 'assets/dental-reception.jpg',
-    lede: 'Design-forward remodels and bespoke interiors — cabinetry, millwork, wall systems, and finishes, all handled under one roof.',
-    narrative: {
-      heading: 'Rooms That Feel Made For You.',
-      paragraphs: [
-        "Renovations at KCW aren't about ripping things out — they're about making a space finally work the way it should. Kitchens that flow. Built-ins that earn their footprint. Bathrooms that don't feel borrowed from a showroom. Commercial fit-outs that say something about who you are.",
-        'We design, mill, and install every major wood element in-house, which means tighter tolerances, faster timelines, and fewer "someone else\'s problem" moments. If we draw it, we can build it.',
-        "Whether it's one room or the entire floor plan, we'll handle design, demo, millwork, and finishes — and keep your day-to-day livable while we do.",
-      ],
-    },
-    specs: {
-      heading: 'Where We Go Deep',
-      items: [
-        { label: 'Custom Kitchens',         value: 'Cabinetry, islands, pantries, and integrated appliances — designed around how you actually cook.' },
-        { label: 'Built-Ins & Millwork',    value: 'Bookcases, media walls, entryways, closets — pieces that look like the room was built around them.' },
-        { label: 'Wall Paneling & Ceilings', value: 'Slat walls, fluted panels, coffered ceilings — texture done without the gimmick.' },
-        { label: 'Bath & Laundry',          value: 'Vanities, linen towers, and built-in storage that earn every inch.' },
-        { label: 'Commercial Fit-Outs',     value: 'Dental offices, retail, and hospitality — reception desks, slat ceilings, and finish work that reads professional.' },
-      ],
-    },
-    cta: {
-      heading: 'Ready To Redesign A Space?',
-      body: "Send us the room and what isn't working — we'll come back with options.",
-      label: 'Book A Consultation',
-    },
-    metaDescription: 'KCW — Custom Design & Renovations. Bespoke interior renovations, cabinetry, and millwork across the Greater Toronto Area.',
   },
 };

@@ -4,6 +4,7 @@
    Shared markup lives in templates.js; data in data.js.
    ============================================ */
 
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Inject shared chrome (header/footer) based on slot data attrs.
   injectSiteChrome();
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4. Wire up interactive behaviour. Each initializer is a no-op
   //    if its required DOM isn't on the current page.
+  initPageTransitions();
   initSplash();
   initHeader();
   initMobileMenu();
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initImageLoad();
   initFounderSlideshow();
   initProjectCarousel();
+  initVideoBoomerang();
 });
 
 /* ============================================
@@ -57,14 +60,12 @@ function initHeader() {
   const header = document.querySelector('.header');
   if (!header) return;
 
-  // Only scroll-toggle the header look on pages with a hero (index).
-  // On detail pages, the header starts scrolled and stays scrolled.
-  const hasHero = !!document.querySelector('.hero');
-  if (!hasHero) return;
-
-  window.addEventListener('scroll', () => {
+  const update = () => {
     header.classList.toggle('scrolled', window.pageYOffset > 50);
-  }, { passive: true });
+  };
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
 }
 
 /* ============================================
@@ -125,8 +126,21 @@ function initSmoothScroll() {
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
+
       const headerH = document.querySelector('.header')?.offsetHeight || 80;
-      window.scrollTo({ top: target.offsetTop - headerH, behavior: 'smooth' });
+      let top;
+      if (id === '#about') {
+        // Land flush on the K/C/W grid (the full-viewport image grid),
+        // skipping the cream gap above it inside #about.
+        const grid = target.querySelector('.page-hero-grid');
+        top = grid
+          ? grid.getBoundingClientRect().top + window.scrollY
+          : target.offsetTop;
+      } else {
+        top = target.offsetTop - headerH;
+      }
+
+      window.scrollTo({ top, behavior: 'smooth' });
     });
   });
 }
@@ -162,11 +176,38 @@ function initAboutHero() {
       if (entry.isIntersecting) {
         heroGrid.classList.add('revealed');
         observer.unobserve(heroGrid);
+        // On about.html, hand the viewer off to the framed about-intro
+        // card after the K/C/W reveal completes.
+        if (document.body.dataset.page === 'about') {
+          scheduleAboutHandoff();
+        }
       }
     });
   }, { threshold: 0.2 });
 
   observer.observe(heroGrid);
+}
+
+function scheduleAboutHandoff() {
+  setTimeout(() => {
+    const target = document.getElementById('about-intro');
+    if (!target) return;
+    const headerH = document.querySelector('.header')?.offsetHeight || 80;
+    const targetTop = target.offsetTop - headerH;
+    if (window.scrollY > targetTop + window.innerHeight * 0.5) return;
+    const start = window.scrollY;
+    const distance = targetTop - start;
+    const duration = 600;
+    let startTime = null;
+    function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = Math.min((ts - startTime) / duration, 1);
+      window.scrollTo(0, start + distance * easeInOutCubic(elapsed));
+      if (elapsed < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, 3000);
 }
 
 /* ============================================
@@ -311,7 +352,6 @@ function initProjectCarousel() {
   if (!stage || typeof gsap === 'undefined') return;
 
   const slides = Array.from(stage.querySelectorAll('.project-slide'));
-  const houses = slides.map(s => s.querySelector('.project-house'));
   const navPrev = stage.querySelector('.project-nav-prev');
   const navNext = stage.querySelector('.project-nav-next');
 
@@ -321,30 +361,16 @@ function initProjectCarousel() {
   if (index < 0) index = 0;
   let isAnimating = false;
 
-  const floatTweens = houses.map(house => {
-    if (!house) return null;
-    return gsap.to(house, {
-      y: -14,
-      duration: 3.4,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
-  });
-
   const goTo = (newIndex, direction) => {
     if (isAnimating || newIndex === index) return;
     const total = slides.length;
     const target = ((newIndex % total) + total) % total;
     const outgoing = slides[index];
     const incoming = slides[target];
-    const inHouse = houses[target];
     const dir = direction || (target > index ? 1 : -1);
 
     isAnimating = true;
     const OFFSET = window.innerWidth < 800 ? 120 : 240;
-
-    if (inHouse) gsap.set(inHouse, { rotationX: 0, rotationY: 0 });
 
     gsap.set(outgoing, { zIndex: 1 });
     gsap.set(incoming, { zIndex: 2, x: dir * OFFSET, opacity: 0 });
@@ -384,48 +410,6 @@ function initProjectCarousel() {
     if (e.key === 'ArrowLeft') goTo(index - 1, -1);
     if (e.key === 'ArrowRight') goTo(index + 1, 1);
   });
-
-  const MAX_TILT = 14;
-  slides.forEach((slide, i) => {
-    const house = houses[i];
-    if (!house) return;
-
-    let rect = null;
-    const captureRect = () => { rect = slide.getBoundingClientRect(); };
-
-    slide.addEventListener('mouseenter', () => {
-      captureRect();
-      floatTweens[i]?.pause();
-    });
-
-    slide.addEventListener('mousemove', (e) => {
-      if (!rect) captureRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
-      gsap.to(house, {
-        rotationY: px * MAX_TILT * 2,
-        rotationX: -py * MAX_TILT * 2,
-        duration: 0.5,
-        ease: 'power2.out',
-        transformPerspective: 1600,
-        transformOrigin: 'center center',
-      });
-    });
-
-    slide.addEventListener('mouseleave', () => {
-      gsap.to(house, {
-        rotationY: 0,
-        rotationX: 0,
-        y: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        onComplete: () => { floatTweens[i]?.resume(); },
-      });
-    });
-
-    window.addEventListener('resize', () => { rect = null; });
-    window.addEventListener('scroll', () => { rect = null; }, { passive: true });
-  });
 }
 
 function isElementInViewport(el) {
@@ -461,3 +445,79 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+/* ============================================
+   PAGE TRANSITIONS — fade to dark on navigate
+   ============================================ */
+function initPageTransitions() {
+  const wrap = document.createElement('div');
+  wrap.className = 'pt-wrap';
+  document.body.appendChild(wrap);
+
+  // Entry: fade the page in and ensure the overlay is cleared.
+  const reveal = () => {
+    wrap.classList.remove('is-covering');
+    wrap.style.transition = 'none';
+    wrap.style.opacity = '0';
+    setTimeout(() => wrap.style.cssText = '', 50);
+    document.documentElement.style.transition = 'opacity 0.55s ease';
+    document.documentElement.style.opacity = '1';
+    setTimeout(() => document.documentElement.removeAttribute('style'), 650);
+  };
+
+  if (sessionStorage.getItem('pt-active')) {
+    sessionStorage.removeItem('pt-active');
+    reveal();
+  }
+
+  // Back/forward cache restore — overlay may still be covering, clear it.
+  window.addEventListener('pageshow', e => {
+    if (e.persisted) {
+      wrap.classList.remove('is-covering');
+      wrap.style.cssText = '';
+      document.documentElement.removeAttribute('style');
+    }
+  });
+
+  // Exit: fade overlay to green, then navigate
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) return;
+    e.preventDefault();
+    sessionStorage.setItem('pt-active', '1');
+    wrap.classList.add('is-covering');
+    wrap.addEventListener('transitionend', () => {
+      window.location.href = href;
+    }, { once: true });
+  });
+}
+
+/* ============================================
+   VIDEO BOOMERANG — play forward then reverse on loop
+   ============================================ */
+function initVideoBoomerang() {
+  const video = document.querySelector('.hero-bg-video');
+  if (!video) return;
+
+  let prevTs;
+
+  const reverse = (ts) => {
+    if (prevTs !== undefined) {
+      video.currentTime = Math.max(0, video.currentTime - (ts - prevTs) / 1000);
+    }
+    prevTs = ts;
+    if (video.currentTime > 0) {
+      requestAnimationFrame(reverse);
+    } else {
+      prevTs = undefined;
+      video.play();
+    }
+  };
+
+  video.addEventListener('ended', () => {
+    prevTs = undefined;
+    rafId = requestAnimationFrame(reverse);
+  });
+}
