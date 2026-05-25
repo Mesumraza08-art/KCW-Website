@@ -171,21 +171,30 @@ function initAboutHero() {
   const heroGrid = document.getElementById('heroGrid');
   if (!heroGrid) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        heroGrid.classList.add('revealed');
-        observer.unobserve(heroGrid);
-        // On about.html, hand the viewer off to the framed about-intro
-        // card after the K/C/W reveal completes.
-        if (document.body.dataset.page === 'about') {
-          scheduleAboutHandoff();
-        }
-      }
-    });
-  }, { threshold: 0.2 });
+  // Trigger animation immediately on page load
+  const triggerAnimation = () => {
+    heroGrid.classList.add('revealed');
+    if (document.body.dataset.page === 'about') {
+      scheduleAboutHandoff();
+    }
+  };
 
-  observer.observe(heroGrid);
+  // If grid is already in view, trigger immediately
+  if (heroGrid.getBoundingClientRect().top < window.innerHeight) {
+    triggerAnimation();
+  } else {
+    // Otherwise wait for intersection
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          triggerAnimation();
+          observer.unobserve(heroGrid);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(heroGrid);
+  }
 }
 
 function scheduleAboutHandoff() {
